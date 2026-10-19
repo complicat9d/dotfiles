@@ -1,0 +1,169 @@
+- name: Initialize Macs
+  hosts: macs
+  become: false
+  environment:
+    PATH: "/opt/homebrew/bin:{{ ansible_env.PATH }}"
+    HOMEBREW_NO_AUTO_UPDATE: "1"
+
+  tasks:
+    - name: Add taps
+      tags: brew
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ brew_taps }}"
+
+    - name: Trust taps (required by newer Homebrew for third-party taps)
+      tags: brew
+      ansible.builtin.command: "brew trust {{ item }}"
+      loop: "{{ brew_taps }}"
+      changed_when: false
+
+    - name: Install formulae
+      tags: brew
+      community.general.homebrew:
+        name: "{{ brew_formulae }}"
+        state: present
+
+    - name: Install casks
+      tags: brew
+      community.general.homebrew_cask:
+        name: "{{ brew_casks }}"
+        state: present
+
+    - name: Install yabai
+      tags: brew
+      community.general.homebrew:
+        name: "{{ yabai_formula }}"
+        state: present
+
+    - name: Check installed yabai version
+      tags: brew
+      ansible.builtin.command: yabai --version
+      register: yabai_out
+      changed_when: false
+
+    - name: Verify yabai matches the pinned version
+      tags: brew
+      ansible.builtin.assert:
+        that: yabai_version in yabai_out.stdout
+        fail_msg: "yabai is {{ yabai_out.stdout }}, expected {{ yabai_version }}"
+
+    - name: Pin yabai so brew upgrade doesn't change it
+      tags: brew
+      ansible.builtin.command: "brew pin yabai"
+      changed_when: false
+
+    - name: Create config directories
+      tags: [configs, yabai, skhd]
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/.config/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - yabai
+        - skhd
+
+    - name: Copy yabai configuration
+      tags: [configs, yabai]
+      ansible.builtin.copy:
+        src: files/configs/yabai/yabairc
+        dest: "{{ ansible_facts['user_dir'] }}/.config/yabai/yabairc"
+        mode: "0755"
+        backup: true
+      notify: Restart yabai
+
+    - name: Create toggle_app build directory
+      tags: [configs, skhd]
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/files/configs/skhd/bin"
+        state: directory
+        mode: "0755"
+
+    - name: Compile toggle_app
+      tags: [configs, skhd]
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/xcrun
+          - swiftc
+          - -O
+          - "{{ playbook_dir }}/files/scripts/toggle_app.swift"
+          - -o
+          - "{{ playbook_dir }}/files/configs/skhd/bin/toggle_app"
+
+    - name: Copy skhd configuration
+      tags: [configs, skhd]
+      ansible.builtin.copy:
+        src: files/configs/skhd/
+        dest: "{{ ansible_facts['user_dir'] }}/.config/skhd/"
+        mode: preserve
+        directory_mode: "0755"
+        backup: true
+      notify: Reload skhd
+
+    - name: Install Oh My Zsh
+      tags: zsh
+      ansible.builtin.git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"
+        depth: 1
+        update: false
+
+    - name: Install Powerlevel10k
+      tags: zsh
+      ansible.builtin.git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: >-
+          {{ ansible_facts['user_dir'] }}/.oh-my-zsh/custom/themes/powerlevel10k
+        depth: 1
+        update: false
+
+    - name: Copy Zsh configuration
+      tags: [zsh, configs]
+      ansible.builtin.copy:
+        src: "files/zsh/{{ item.src }}"
+        dest: "{{ ansible_facts['user_dir'] }}/{{ item.dest }}"
+        mode: "0644"
+        backup: true
+      loop:
+        - { src: zshrc, dest: .zshrc }
+        - { src: p10k.zsh, dest: .p10k.zsh }
+
+    - name: Install bundled VSCodium extensions
+      tags: [vscode, configs]
+      ansible.builtin.command:
+        argv:
+          - /opt/homebrew/bin/codium
+          - --install-extension
+          - "{{ item }}"
+      loop: "{{ query('ansible.builtin.fileglob', playbook_dir ~ '/files/vscode/*.vsix') }}"
+
+    - name: Configure Finder display preferences
+      tags: [configs, finder]
+      community.general.osx_defaults:
+        domain: com.apple.finder
+        key: "{{ item.key }}"
+        type: "{{ item.type }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: AppleShowAllFiles, type: bool, value: true }
+        - { key: ShowPathbar, type: bool, value: true }
+        - { key: FXPreferredViewStyle, type: string, value: Nlsv }
+      notify: Restart Finder
+
+  handlers:
+    - name: Restart yabai
+      ansible.builtin.command:
+        argv:
+          - yabai
+          - --restart-service
+
+    - name: Reload skhd
+      ansible.builtin.command:
+        argv:
+          - skhd
+          - --reload
+
+    - name: Restart Finder
+      ansible.builtin.command:
+        argv: [/usr/bin/killall, Finder]

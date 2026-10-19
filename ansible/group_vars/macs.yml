@@ -1,0 +1,32 @@
+ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+brew_formulae:
+  - bun
+  - git
+  - neovim
+  - node
+  - postgresql
+  - redis
+  - telnet
+  - tree
+
+brew_casks:
+  - blackhole-16ch
+  - brave-browser
+  - dbeaver-community
+  - docker-desktop
+  - free-download-manager
+  - kitty
+  - obsidian
+  - postman
+  - skhd-zig
+  - telegram
+  - vorssaint
+  - vscodium
+
+brew_taps:
+  - asmvik/formulae
+  - jackielii/tap
+
+yabai_version: "7.1.16"
+yabai_formula: asmvik/formulae/yabai

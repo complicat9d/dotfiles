@@ -1,0 +1,41 @@
+.shell "/bin/bash"
+
+# ── templates ─────────────────────────────────────────────────────────
+.define toggle : ~/.config/skhd/bin/toggle_app "{{1}}"
+.define focus  : yabai -m window --focus {{1}}
+.define grid   : yabai -m window --grid {{1}}
+.define layout : yabai -m space --layout {{1}}
+
+# ── apps ──────────────────────────────────────────────────────────────
+hyper - m : @toggle("Activity Monitor")
+hyper - b : @toggle("Brave Browser")
+hyper - d : @toggle("DBeaver")
+hyper - f : @toggle("Finder")
+hyper - o : @toggle("Obsidian")
+hyper - w : @toggle("Microsoft Word")
+hyper - x : @toggle("kitty")
+hyper - v : @toggle("VSCodium")
+hyper - t : @toggle("Microsoft Teams")
+
+# ── focus (bsp) ───────────────────────────────────────────────────────
+alt - h : @focus("west")
+alt - j : @focus("south")
+alt - k : @focus("north")
+alt - l : @focus("east")
+
+# ── half-tiling ───────────────────────────────────────────────────────
+shift + alt - h : @grid("1:2:0:0:1:1")
+shift + alt - l : @grid("1:2:1:0:1:1")
+shift + alt - k : @grid("2:1:0:0:1:1")
+shift + alt - j : @grid("2:1:0:1:1:1")
+
+# ── pin / unpin ───────────────────────────────────────────────────────
+alt - p         : yabai -m window --sub-layer above
+shift + alt - p : yabai -m window --sub-layer below
+
+# ── windowed fullscreen ───────────────────────────────────────────────
+alt - m : yabai -m window --toggle windowed-fullscreen
+
+# ── space layout ──────────────────────────────────────────────────────
+alt - b         : @layout("bsp")
+shift + alt - b : yabai -m space --layout float; yabai -m query --windows --space | jq -r '.[].id' | while read id; do yabai -m window "$id" --toggle windowed-fullscreen; done
