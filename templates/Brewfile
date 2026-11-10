@@ -24,16 +24,12 @@ brew "git-xet"
 brew "libomp"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
 # Object-relational database system
 brew "postgresql@16", restart_service: :changed, link: true
 # Persistent key-value database, with built-in net interface
 brew "redis"
 # Cross-shell prompt for astronauts
 brew "starship"
-# User interface to the TELNET protocol
-brew "telnet"
 # Terminal multiplexer
 brew "tmux"
 # Extremely fast Python package installer and resolver, written in Rust
