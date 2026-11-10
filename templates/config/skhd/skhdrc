@@ -6,16 +6,16 @@
 .define grid   : yabai -m window --grid {{1}}
 .define layout : yabai -m space --layout {{1}}
 
-# ── apps ──────────────────────────────────────────────────────────────
-hyper - m : @toggle("Activity Monitor")
-hyper - b : @toggle("Brave Browser")
-hyper - d : @toggle("DBeaver")
-hyper - f : @toggle("Finder")
-hyper - o : @toggle("Obsidian")
-hyper - w : @toggle("Microsoft Word")
-hyper - x : @toggle("kitty")
-hyper - v : @toggle("VSCodium")
-hyper - t : @toggle("Microsoft Teams")
+# ── apps (bundle IDs) ─────────────────────────────────────────────────
+hyper - m : @toggle("com.apple.ActivityMonitor")
+hyper - b : @toggle("com.brave.Browser")
+hyper - d : @toggle("org.jkiss.dbeaver.core.product")
+hyper - f : @toggle("com.apple.finder")
+hyper - o : @toggle("md.obsidian")
+hyper - w : @toggle("com.microsoft.Word")
+hyper - x : @toggle("com.mitchellh.ghostty")
+hyper - v : @toggle("com.vscodium")
+hyper - t : @toggle("com.microsoft.teams2")
 
 # ── focus (bsp) ───────────────────────────────────────────────────────
 alt - h : @focus("west")
@@ -34,7 +34,7 @@ alt - p         : yabai -m window --sub-layer above
 shift + alt - p : yabai -m window --sub-layer below
 
 # ── windowed fullscreen ───────────────────────────────────────────────
-alt - m : yabai -m window --toggle windowed-fullscreen
+alt - m : ~/.config/skhd/bin/fs_ax
 
 # ── space layout ──────────────────────────────────────────────────────
 alt - b         : @layout("bsp")

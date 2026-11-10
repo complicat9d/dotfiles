@@ -1,0 +1,65 @@
+tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git"
+tap "jackielii/tap"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Incredibly fast JavaScript runtime, bundler, test runner, and package manager
+brew "bun"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Isolated development environments using Docker
+brew "docker-compose"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Distributed revision control system
+brew "git"
+# Git LFS plugin that uploads and downloads using the Xet protocol
+brew "git-xet"
+# LLVM's OpenMP runtime library
+brew "libomp"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Object-relational database system
+brew "postgresql@16", restart_service: :changed, link: true
+# Persistent key-value database, with built-in net interface
+brew "redis"
+# Cross-shell prompt for astronauts
+brew "starship"
+# User interface to the TELNET protocol
+brew "telnet"
+# Terminal multiplexer
+brew "tmux"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Check your $HOME for unwanted files and directories
+brew "xdg-ninja"
+# VPN for privacy and security
+cask "adguard-vpn"
+# Virtual Audio Driver
+cask "blackhole-16ch"
+# Web browser focusing on privacy
+cask "brave-browser"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
+# Universal database tool and SQL client
+cask "dbeaver-community"
+# Download accelerator and organiser
+cask "free-download-manager"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+cask "jackielii/tap/skhd-zig"
+# Messaging app with a focus on speed and security
+cask "telegram"
+# Menu bar toolkit with keep-awake, system monitor and volume mixer
+cask "vorssaint"
+# Binary releases of VS Code without MS branding/telemetry/licensing
+cask "vscodium"
