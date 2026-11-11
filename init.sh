@@ -6,8 +6,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 scripts=(
   install-brew.sh
   compile-binaries.sh
+  install-zshenv.sh
   init-configs.sh
-  install-vsix.sh
+  init-vscode.sh
   confgiure-finder.sh
 )
 

@@ -2,8 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="$SCRIPT_DIR/../templates/config/skhd/scripts"
-BIN_DIR="$HOME/.config/skhd/bin"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+SRC_DIR="$ROOT_DIR/templates/config/skhd/scripts"
+BIN_DIR="$ROOT_DIR/templates/config/skhd/bin"
 
 if ! xcode-select -p >/dev/null 2>&1; then
     echo "Command Line Tools not found — installing (confirm the dialog)…"

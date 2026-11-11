@@ -2,10 +2,22 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ETC_DIR="$SCRIPT_DIR/../templates/etc"
-CONFIG_DIR="$SCRIPT_DIR/../templates/config"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ETC_DIR="$ROOT_DIR/templates/etc"
+CONFIG_DIR="$ROOT_DIR/templates/config"
+DEST="$HOME/.config"
 
-sudo cp "$ETC_DIR/zshenv" /etc/zshenv
+mkdir -p "$DEST"
+shopt -s nullglob
 
-mkdir -p ~/.config
-cp -R "$CONFIG_DIR/." ~/.config/
+for src in "$CONFIG_DIR"/*; do
+    name="$(basename "$src")"
+    dest="$DEST/$name"
+
+    if [[ -e "$dest" && ! -L "$dest" ]]; then
+        rm -rf "$dest"
+    fi
+
+    ln -sfn "$src" "$dest"
+    echo "Linked $name" "$dest"
+done
