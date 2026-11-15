@@ -1,5 +1,4 @@
 # --- Ghostty --- 
-alias ssh='ghostty +ssh --'
 export EDITOR=nvim
 export VISUAL=nvim
 
@@ -57,4 +56,21 @@ export LS_COLORS="di=1;94:ln=96:ex=1;92:fi=0:or=91:so=93:pi=93"
 zmodload zsh/complist
 autoload -Uz compinit
 compinit -u -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} 'ma=1;95'
+
+# --- history prefix search on arrows ---
+bindkey -e
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
+
+# --- history size ---
+HISTSIZE=50000
+SAVEHIST=50000
+setopt share_history hist_ignore_dups
+[[ -d ${HISTFILE:h} ]] || mkdir -p ${HISTFILE:h}

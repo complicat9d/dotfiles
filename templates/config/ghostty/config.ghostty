@@ -52,4 +52,13 @@
 # resize-overlay-duration = 4s 200ms
 
 theme = Aardvark Ink
+
 macos-option-as-alt = left
+
+shell-integration = zsh
+
+shell-integration-features = ssh-env,ssh-terminfo
+
+confirm-close-surface = false
+quit-after-last-window-closed = false
+clipboard-paste-protection = false
